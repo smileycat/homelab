@@ -9,7 +9,7 @@ curl -sSL https://repo.45drives.com/setup | sudo bash # cockpit plugin repo
 sudo apt update
 sudo apt install certbot vim git acpid rsync qemu-guest-agent python3-certbot-dns-cloudflare -y
 sudo apt install -t ${VERSION_CODENAME}-backports cockpit # ubuntu
-sudo apt install cockpit-file-sharing cockpit-identities
+sudo apt install cockpit-file-sharing cockpit-identities cockpit-navigator cockpit-zfs-manager
 # sudo apt install zfsutils-linux wireguard resolvconf -y # for penguin server
 sudo systemctl enable acpid
 sudo systemctl start acpid
