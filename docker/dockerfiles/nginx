@@ -1,0 +1,19 @@
+ARG NGINX_VERSION=1.27.3
+
+FROM nginx:$NGINX_VERSION AS build-stage
+ADD https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz /tmp
+RUN apt update && \
+    apt install -y libmaxminddb0 libmaxminddb-dev mmdb-bin gcc git make zlib1g-dev libpcre3 libpcre3-dev  && \
+    cd /tmp && tar -xzvf nginx-$NGINX_VERSION.tar.gz
+
+WORKDIR /tmp/nginx-$NGINX_VERSION
+# Grab the geoip2 package
+RUN git clone https://github.com/leev/ngx_http_geoip2_module.git && \
+    ./configure --with-compat --add-dynamic-module=./ngx_http_geoip2_module && \
+    make modules && \
+    chmod 644 ./objs/ngx_http_geoip2_module.so
+
+FROM nginx:$NGINX_VERSION
+COPY --from=build-stage /tmp/nginx-$NGINX_VERSION/objs/ngx_http_geoip2_module.so /etc/nginx/modules/ngx_http_geoip2_module.so
+RUN apt update && apt install -y libmaxminddb0 libmaxminddb-dev mmdb-bin
+CMD ["nginx", "-g", "daemon off;"]

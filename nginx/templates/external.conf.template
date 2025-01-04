@@ -1,12 +1,12 @@
 
 server {
     listen 8443 ssl;
-    server_name photos.smileyfam.me photos-pg.smileyfam.me;
+    server_name photos.smileyfam.me;
     
     include /etc/nginx/conf.d/immich.conf;
 
     location / {
-        if ($redirect = no) {
+        if ($allowed_country = 0) {
             return 403;
         }
         proxy_pass http://immich;
@@ -21,7 +21,7 @@ server {
     listen 8443 ssl;
     server_name auth.smileyfam.me;
 
-    if ($redirect = no) {
+    if ($allowed_country = 0) {
         return 403;
     }
 

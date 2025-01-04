@@ -49,7 +49,9 @@ services:
       - /etc/letsencrypt/archive:/etc/letsencrypt/archive:ro
   
   nginx:
-    image: nginx:1.27
+    build:
+      context: ./dockerfiles
+      dockerfile: nginx
     container_name: nginx-external
     hostname: nginx-external
     network_mode: host
