@@ -10,7 +10,7 @@ services:
     networks:
       - vaultwarden
     environment:
-      DOMAIN: "https://vault.smileyfam.au"
+      DOMAIN: "https://vault.smileyfam.me"
     volumes:
       - ${DOCKER_VOL}/vaultwarden/:/data/
     ports:

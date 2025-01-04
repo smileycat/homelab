@@ -38,6 +38,17 @@ server {
 
 server {
     listen 443 ssl;
+    server_name vault.smileyfam.me;
+    access_log off;
+
+    location / {
+        include /etc/nginx/conf.d/proxy.conf;
+        proxy_pass http://vaultwarden;
+    }
+}
+
+server {
+    listen 443 ssl;
     server_name pgadmin.${HOSTNAME};
     access_log off;
     

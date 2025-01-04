@@ -4,6 +4,7 @@ include:
   # - immich/compose.yaml
   - misc/photoprism.yaml
   - misc/jellyfin.yaml
+  - misc/vaultwarden.yaml
 
 networks:
   pi_wg_network:
