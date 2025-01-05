@@ -32,7 +32,7 @@ server {
     location / {
         include /etc/nginx/conf.d/proxy.conf;
         proxy_pass http://authentik;
-        proxy_set_header Connection $connection_upgrade_keepalive;
+        proxy_set_header Connection $connection_upgrade;
     }
 }
 
@@ -40,6 +40,9 @@ server {
     listen 443 ssl;
     server_name vault.smileyfam.me;
     access_log off;
+
+    ssl_certificate /etc/letsencrypt/live/smileyfam.me/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/smileyfam.me/privkey.pem;
 
     location / {
         include /etc/nginx/conf.d/proxy.conf;
@@ -64,18 +67,6 @@ server {
     server_name jellyfin.${HOSTNAME};
     access_log off;
     include /etc/nginx/conf.d/jellyfin.conf;
-}
-
-server {
-    listen 443 ssl;
-    server_name auth.smileyfam.me;
-    access_log off;
-
-    location / {
-        include /etc/nginx/conf.d/proxy.conf;
-        proxy_pass http://authentik;
-        proxy_set_header Connection $connection_upgrade_keepalive;
-    }
 }
 
 server {
