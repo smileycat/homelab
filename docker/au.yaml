@@ -5,6 +5,7 @@ include:
   - misc/photoprism.yaml
   - misc/jellyfin.yaml
   - misc/vaultwarden.yaml
+  - misc/navidrome.yaml
 
 networks:
   pi_wg_network:
@@ -18,6 +19,7 @@ services:
     image: pihole/pihole:latest
     container_name: pihole
     restart: unless-stopped
+    profiles: ["low"]
     volumes:
       - ${DOCKER_VOL}/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
       - ${DOCKER_VOL}/pihole/etc-pihole:/etc/pihole
@@ -73,6 +75,7 @@ services:
   wg-easy:
     image: ghcr.io/wg-easy/wg-easy:14
     container_name: wg-easy
+    profiles: ["low"]
     networks:
       pi_wg_network:
         ipv4_address: 10.8.1.3

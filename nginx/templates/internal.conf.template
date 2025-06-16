@@ -15,6 +15,17 @@ server {
 
 server {
     listen 443 ssl;
+    server_name music.smileyfam.me;
+    access_log off;
+
+    location / {
+        include /etc/nginx/conf.d/proxy.conf;
+        proxy_pass http://navidrome;
+    }
+}
+
+server {
+    listen 443 ssl;
     server_name sso.smileyfam.me;
     access_log off;
 
@@ -167,6 +178,17 @@ server {
     location / {
         include /etc/nginx/conf.d/proxy.conf;
         proxy_pass http://filebrowser;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name metube.${HOSTNAME};
+    access_log off;
+
+    location / {
+        include /etc/nginx/conf.d/proxy.conf;
+        proxy_pass http://metube;
     }
 }
 

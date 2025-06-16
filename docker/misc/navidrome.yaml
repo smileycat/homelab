@@ -1,0 +1,19 @@
+services:
+  navidrome:
+    image: deluan/navidrome:latest
+    container_name: navidrome
+    networks:
+      - common
+    user: 1000:1000 # should be owner of volumes
+    ports:
+      - 4533:4533
+    restart: unless-stopped
+    environment:
+      ND_SCANSCHEDULE: 0
+      ND_LOGLEVEL: info
+      ND_SESSIONTIMEOUT: 168h # a week
+      ND_BASEURL: ""
+      ND_CONFIGFILE: /data/navidrome.toml
+    volumes:
+      - "${DOCKER_VOL}/navidrome:/data"
+      - "/mnt/data/sync/Music:/music:ro"
