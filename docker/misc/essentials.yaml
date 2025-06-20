@@ -36,7 +36,6 @@ services:
   filebrowser:
     image: filebrowser/filebrowser
     container_name: filebrowser
-    profiles: ["low"]
     networks:
       - common
     volumes:
