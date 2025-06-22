@@ -29,8 +29,6 @@ upstream wireguard {
 
 upstream authentik {
     server 127.0.0.1:6603;
-    # Improve performance by keeping some connections alive.
-    keepalive 10;
 }
 
 upstream moon {
@@ -67,11 +65,15 @@ upstream cockpit {
 
 upstream immich {
     server 127.0.0.1:2283;
-    keepalive 5;
+    keepalive 10;
 }
 
 upstream gallery {
     server 127.0.0.1:2342;
+}
+
+upstream pve {
+    server ${PVE_IP};
 }
 
 upstream metube {

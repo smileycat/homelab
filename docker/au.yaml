@@ -1,5 +1,6 @@
 include:
   - misc/essentials.yaml
+  - misc/nginx.yaml
   - misc/pgadmin.yaml
   # - immich/compose.yaml
   - misc/photoprism.yaml
@@ -35,42 +36,6 @@ services:
       - TZ='Australia/Melbourne'
     dns:
       - 127.0.0.1
-
-  nginx-internal:
-    image: nginx:1.27
-    container_name: nginx-internal
-    network_mode: host
-    restart: unless-stopped
-    command: sh -c 'mkdir -p /etc/nginx/sites && exec /docker-entrypoint.sh nginx -g "daemon off;"'
-    environment:
-      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/sites
-      - HOSTNAME=smileyfam.au
-    volumes:
-      - ${HOME}/homelab/nginx/nginx-int.conf:/etc/nginx/nginx.conf:ro
-      - ${HOME}/homelab/nginx/templates:/etc/nginx/templates:ro
-      - ${HOME}/homelab/nginx/conf.d:/etc/nginx/conf.d:ro
-      - ${HOME}/keystore:/etc/keystore:ro
-      - /etc/letsencrypt/live:/etc/letsencrypt/live:ro
-      - /etc/letsencrypt/archive:/etc/letsencrypt/archive:ro
-  
-  nginx:
-    build:
-      context: ./dockerfiles
-      dockerfile: nginx
-    container_name: nginx-external
-    hostname: nginx-external
-    network_mode: host
-    restart: unless-stopped
-    command: sh -c 'mkdir -p /etc/nginx/sites && exec /docker-entrypoint.sh nginx -g "daemon off;"'
-    environment:
-      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/sites
-      - HOSTNAME=smileyfam.au
-    volumes:
-      - ${HOME}/homelab/nginx/nginx-ext.conf:/etc/nginx/nginx.conf:ro
-      - ${HOME}/homelab/nginx/templates:/etc/nginx/templates:ro
-      - ${HOME}/homelab/nginx/conf.d:/etc/nginx/conf.d:ro
-      - /etc/letsencrypt/live:/etc/letsencrypt/live:ro
-      - /etc/letsencrypt/archive:/etc/letsencrypt/archive:ro
 
   wg-easy:
     image: ghcr.io/wg-easy/wg-easy:14

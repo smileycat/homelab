@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
 
   filebrowser:
-    image: filebrowser/filebrowser
+    image: filebrowser/filebrowser:v2.32.1
     container_name: filebrowser
     networks:
       - common

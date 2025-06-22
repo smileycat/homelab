@@ -1,4 +1,4 @@
-ARG NGINX_VERSION=1.27.3
+ARG NGINX_VERSION=1.27.5
 
 FROM nginx:$NGINX_VERSION AS build-stage
 ADD https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz /tmp

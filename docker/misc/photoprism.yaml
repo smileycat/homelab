@@ -32,7 +32,7 @@ services:
   photoprism:
     image: photoprism/photoprism:latest
     container_name: photoprism
-    profiles: ["low"]
+    # profiles: ["low"]
     restart: unless-stopped
     networks:
       - photoprism_network
@@ -50,7 +50,7 @@ services:
       PHOTOPRISM_ADMIN_USER: "admin"                 # admin login username
       PHOTOPRISM_ADMIN_PASSWORD: "insecure"          # initial admin password (8-72 characters)
       PHOTOPRISM_AUTH_MODE: "password"               # authentication mode (public, password)
-      PHOTOPRISM_SITE_URL: "https://mgy-gallery.smileyfam.au/"  # server URL in the format "http(s)://domain.name(:port)/(path)"
+      PHOTOPRISM_SITE_URL: "https://gallery.smileyfam.au/"  # server URL in the format "http(s)://domain.name(:port)/(path)"
       PHOTOPRISM_DISABLE_TLS: "false"                # disables HTTPS/TLS even if the site URL starts with https:// and a certificate is available
       PHOTOPRISM_DEFAULT_TLS: "false"                # defaults to a self-signed HTTPS/TLS certificate if no other certificate is available
       PHOTOPRISM_ORIGINALS_LIMIT: 5000               # file size limit for originals in MB (increase for high-res video)
@@ -104,14 +104,14 @@ services:
     working_dir: "/photoprism" # do not change or remove
     volumes:
       - "${DOCKER_VOL}/photoprism/originals:/photoprism/originals"               # Original media files (DO NOT REMOVE)
-      - "/mnt/data/sync/mgy:/photoprism/originals/mgy" # *Additional* media folders can be mounted like this
+      - "/mnt/data/sync/Idols/MGY:/photoprism/originals/mgy" # *Additional* media folders can be mounted like this
+      - "/mnt/data/sync/Idols/Sakura:/photoprism/originals/sakura"
       # - "~/Import:/photoprism/import"                  # *Optional* base folder from which files can be imported to originals
       - "${DOCKER_VOL}/photoprism/storage:/photoprism/storage"                  # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
 
   mariadb:
     image: mariadb:11
     container_name: photoprism-db
-    profiles: ["low"]
     restart: unless-stopped
     networks:
       - photoprism_network

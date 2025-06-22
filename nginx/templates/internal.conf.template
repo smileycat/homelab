@@ -182,6 +182,17 @@ server {
 }
 
 server {
+    listen 443 ssl;
+    server_name pve.${HOSTNAME};
+    access_log off;
+
+    location / {
+        include /etc/nginx/conf.d/proxy.conf;
+        proxy_pass https://pve;
+    }
+}
+
+server {
     listen 80;
     server_name *.smileyfam.me smileyfam.me *.smileyfam.au smileyfam.au *.smileyfam.tw smileyfam.tw;
     return 301 https://$host$request_uri;
