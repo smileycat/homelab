@@ -63,6 +63,17 @@ server {
 
 server {
     listen 443 ssl;
+    server_name speedtest.smileyfam.${HOSTNAME};
+    access_log off;
+
+    location / {
+        include /etc/nginx/conf.d/proxy.conf;
+        proxy_pass http://libre_speed_test;
+    }
+}
+
+server {
+    listen 443 ssl;
     server_name pgadmin.${HOSTNAME};
     access_log off;
     

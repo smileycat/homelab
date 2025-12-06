@@ -79,3 +79,7 @@ upstream pve {
 upstream metube {
     server 192.168.80.8:8081;
 }
+
+upstream libre_speed_test {
+    server 192.168.80.5:8080;
+}
