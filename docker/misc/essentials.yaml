@@ -15,6 +15,15 @@ services:
     ports:
       - 9000:9000
 
+  moon-v2:
+    build:
+      context: ../../moonV2
+      dockerfile: Dockerfile
+    container_name: moon-v2
+    networks:
+      - common
+    restart: unless-stopped
+
   syncthing:
     image: syncthing/syncthing:1
     container_name: syncthing

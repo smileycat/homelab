@@ -3,11 +3,10 @@ package scheduler
 import (
 	"bytes"
 	"encoding/json"
+	"moon-v2/internal/config"
 	"moon-v2/internal/http"
 	"moon-v2/internal/log"
-	"os"
 	"slices"
-	"strings"
 	"time"
 )
 
@@ -27,7 +26,7 @@ var httpClient http.Client
 var dnsRecords []DNSRecord
 var publicIP string
 
-func updateDNSRecord(r DNSRecord) {
+func updateDNSRecord(r *DNSRecord) {
 	oldIP := r.Content
 	r.Content = publicIP
 	r.Comment = "Last updated: " + time.Now().Format("2006-01-02 15:04:05 MST")
@@ -43,12 +42,11 @@ func fetchDNSRecords() {
 	var jsonBody ApiResponse
 	json.Unmarshal(body, &jsonBody)
 
-	trackedDomains := strings.Split(os.Getenv("DNS_UPDATE_LIST"), ",")
 	for _, item := range jsonBody.Result {
-		if slices.Contains(trackedDomains, item.Name) {
+		if slices.Contains(config.DnsUpdateList, item.Name) {
 			dnsRecords = append(dnsRecords, item)
 			if item.Content != publicIP {
-				updateDNSRecord(item)
+				updateDNSRecord(&item)
 			}
 		}
 	}
@@ -71,14 +69,14 @@ func DDNS() {
 	publicIP = newIP
 
 	for _, r := range dnsRecords {
-		go updateDNSRecord(r)
+		go updateDNSRecord(&r)
 	}
 }
 
 func DDNSInit() {
 	httpClient = http.Client{
-		BaseURL: "https://api.cloudflare.com/client/v4/zones/" + os.Getenv("ZONE_ID"),
-		Header:  http.Header{Authorization: os.Getenv("CF_TOKEN")},
+		BaseURL: "https://api.cloudflare.com/client/v4/zones/" + config.ZoneID,
+		Header:  http.Header{Authorization: config.CfToken},
 	}
 
 	publicIP = getPublicIP()

@@ -1,6 +1,7 @@
 #!bin/bash
 user=polarbear
 
+# Next two lines mean the user cron can do the "systemctl restart wg-quick*" command without a password
 sudo useradd -rM -s /usr/sbin/nologin cron
 echo "cron ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart wg-quick*" | sudo tee -a /etc/sudoers
 
@@ -10,11 +11,14 @@ sudo apt update
 sudo apt install certbot vim git acpid rsync qemu-guest-agent python3-certbot-dns-cloudflare -y
 sudo apt install -t ${VERSION_CODENAME}-backports cockpit # ubuntu
 sudo apt install cockpit-file-sharing cockpit-identities cockpit-navigator cockpit-zfs-manager
-# sudo apt install zfsutils-linux wireguard resolvconf -y # for penguin server
+# sudo apt install cron zfsutils-linux wireguard resolvconf -y # for penguin server
 sudo systemctl enable acpid
 sudo systemctl start acpid
 sudo systemctl enable qemu-guest-agent
 sudo systemctl start qemu-guest-agent
+
+# Add cron job to restart wireguard every 6 hours; for penguin server
+# (sudo crontab -l 2>/dev/null; echo "0 */6 * * * systemctl restart wg-quick@polarbear") | sudo crontab -
 
 ######### INSTALL DOCKER, NODE #########
 # Add Docker's official GPG key, and repository to Apt

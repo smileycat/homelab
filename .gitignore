@@ -2,6 +2,7 @@
 ._*
 *.service
 secret.js
+prod.go
 test.yaml
 
 build
