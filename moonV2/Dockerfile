@@ -8,5 +8,6 @@ RUN go mod download && \
 FROM scratch
 COPY --from=builder /build/moon-v2 /moon-v2
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 
 CMD ["/moon-v2"]

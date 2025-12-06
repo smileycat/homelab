@@ -3,11 +3,14 @@ package main
 import (
 	"moon-v2/internal/config"
 	"moon-v2/internal/scheduler"
+	"os"
 
 	"github.com/robfig/cron/v3"
 )
 
 func main() {
+	os.Setenv("TZ", config.TZ)
+
 	c := cron.New()
 	c.Start()
 	defer c.Stop()
