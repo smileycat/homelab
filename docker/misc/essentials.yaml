@@ -23,6 +23,11 @@ services:
     networks:
       - common
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: 0.05
+          memory: 30M
 
   syncthing:
     image: syncthing/syncthing:1
