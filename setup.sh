@@ -20,6 +20,9 @@ sudo systemctl start qemu-guest-agent
 # Add cron job to restart wireguard every 6 hours; for penguin server
 # (sudo crontab -l 2>/dev/null; echo "0 */6 * * * systemctl restart wg-quick@polarbear") | sudo crontab -
 
+# chmod +x $HOME/homelab/backup.sh
+# (crontab -l 2>/dev/null; echo "0 2 * * * $HOME/homelab/backup.sh") | crontab -
+
 ######### INSTALL DOCKER, NODE #########
 # Add Docker's official GPG key, and repository to Apt
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -40,6 +43,7 @@ sudo usermod -aG docker $user
 
 echo 'export DOCKER_VOL=$HOME/docker-volume' >>~/.bashrc
 echo 'export DOCKER_ENV=$HOME/docker-env' >>~/.bashrc
+echo 'export BACKUP_PATH=/mnt/data/sync/Backup' >>~/.bashrc
 echo 'bind '"'"'"\e[A": history-search-backward'"'"'' >>~/.bashrc
 echo 'bind '"'"'"\e[B": history-search-forward'"'"'' >>~/.bashrc
 

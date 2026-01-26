@@ -14,6 +14,10 @@ services:
       ND_SESSIONTIMEOUT: 168h # a week
       ND_BASEURL: ""
       ND_CONFIGFILE: /data/navidrome.toml
+      ND_BACKUP_PATH: /backup
+      ND_BACKUP_SCHEDULE: "0 2 * * *"
+      ND_BACKUP_COUNT: 7
     volumes:
       - "${DOCKER_VOL}/navidrome:/data"
       - "/mnt/data/sync/Music:/music:ro"
+      - "${BACKUP_PATH}/navidrome:/backup"
