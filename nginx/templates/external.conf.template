@@ -37,6 +37,20 @@ server {
 }
 
 server {
+    listen 8443 ssl;
+    server_name music.smileyfam.me;
+
+    if ($allowed_country = 0) {
+        return 403;
+    }
+
+    location / {
+        include /etc/nginx/conf.d/proxy.conf;
+        proxy_pass http://navidrome;
+    }
+}
+
+server {
     listen 8080;
     server_name *.smileyfam.me smileyfam.me;
     return 301 https://$host$request_uri;
