@@ -1,0 +1,18 @@
+networks:
+  auth:
+    name: auth
+
+services:
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    restart: unless-stopped
+    networks:
+      auth:
+        aliases: []
+    env_file: ${DOCKER_ENV}/authelia/.env
+    volumes:
+      - ${DOCKER_VOL}/authelia:/config
+      - ${DOCKER_ENV}/authelia:/secrets
+    ports:
+      - 127.0.0.1:9091:9091

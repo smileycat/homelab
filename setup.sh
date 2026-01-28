@@ -1,5 +1,13 @@
 #!bin/bash
 user=polarbear
+timezone=Asia/Taipei
+
+sudo timedatectl set-timezone $timezone
+
+# Reduce journal size and retention period
+echo "SystemMaxUse=500M" | sudo tee -a /etc/systemd/journald.conf
+echo "MaxRetentionSec=30d" | sudo tee -a /etc/systemd/journald.conf
+sudo systemctl restart systemd-journald
 
 # Next two lines mean the user cron can do the "systemctl restart wg-quick*" command without a password
 sudo useradd -rM -s /usr/sbin/nologin cron
