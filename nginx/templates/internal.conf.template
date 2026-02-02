@@ -66,20 +66,6 @@ server {
 
 server {
     listen 443 ssl;
-    server_name vw.smileyfam.me;
-    access_log off;
-
-    ssl_certificate /etc/letsencrypt/live/smileyfam.me/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/smileyfam.me/privkey.pem;
-
-    location / {
-        include /etc/nginx/conf.d/proxy.conf;
-        proxy_pass http://vwlxc;
-    }
-}
-
-server {
-    listen 443 ssl;
     server_name speedtest.smileyfam.${HOSTNAME};
     access_log off;
 
