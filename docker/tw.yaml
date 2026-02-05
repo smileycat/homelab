@@ -1,6 +1,7 @@
 include:
   - misc/essentials.yaml
   - misc/nginx.yaml
+  - misc/filebrowser.yaml
   - misc/pgadmin.yaml
   - immich/compose.yaml
 

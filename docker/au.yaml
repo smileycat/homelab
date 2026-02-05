@@ -2,8 +2,9 @@ include:
   - misc/essentials.yaml
   - misc/nginx.yaml
   - misc/pgadmin.yaml
-  # - immich/compose.yaml
-  - misc/photoprism.yaml
+  - immich/compose.yaml
+  - misc/filebrowser.yaml
+  # - misc/photoprism.yaml
   - misc/jellyfin.yaml
   - misc/vaultwarden.yaml
   - misc/navidrome.yaml

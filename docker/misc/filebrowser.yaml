@@ -1,0 +1,29 @@
+ services: 
+  filebrowser-quantum:
+    image: gtstef/filebrowser:stable-slim
+    container_name: filebrowser-quantum
+    user: 1000:1000
+    networks:
+      - common
+    volumes:
+      - /mnt/data/sync:/data # Do not use a root "/" directory or include the "/var" folder
+      - ${DOCKER_VOL}/filebrowser-quantum/config.yaml:/home/filebrowser/config.yaml:ro
+      - ${DOCKER_VOL}/filebrowser-quantum/database.db:/home/filebrowser/database.db
+    ports:
+      - 127.0.0.1:6606:80
+    restart: unless-stopped
+
+  # legacy
+  # filebrowser:
+  #   image: filebrowser/filebrowser:v2.32.1
+  #   container_name: filebrowser
+  #   networks:
+  #     - common
+  #   volumes:
+  #     - /:/srv
+  #     - ${DOCKER_VOL}/filebrowser/database.db:/database/filebrowser.db
+  #     - ${DOCKER_VOL}/filebrowser/.filebrowser.json:/.filebrowser.json
+  #   user: 1000:1000
+  #   ports:
+  #     - 6606:80
+  #   restart: unless-stopped

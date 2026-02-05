@@ -46,17 +46,3 @@ services:
       - 22000:22000/udp # QUIC file transfers
       - 21027:21027/udp # Receive local discovery broadcasts
     restart: unless-stopped
-
-  filebrowser:
-    image: filebrowser/filebrowser:v2.32.1
-    container_name: filebrowser
-    networks:
-      - common
-    volumes:
-      - /:/srv
-      - ${DOCKER_VOL}/filebrowser/database.db:/database/filebrowser.db
-      - ${DOCKER_VOL}/filebrowser/.filebrowser.json:/.filebrowser.json
-    user: 1000:1000
-    ports:
-      - 6606:80
-    restart: unless-stopped
