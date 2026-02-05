@@ -29,29 +29,6 @@ server {
 
 server {
     listen 443 ssl;
-    server_name sso.smileyfam.me;
-    access_log off;
-
-    location / {
-        grpc_pass grpc://zitadel;
-        grpc_set_header Host $host;
-    }
-}
-
-server {
-    listen 443 ssl;
-    server_name auth.smileyfam.me;
-    access_log off;
-
-    location / {
-        include /etc/nginx/conf.d/proxy.conf;
-        proxy_pass http://authentik;
-        proxy_set_header Connection $connection_upgrade;
-    }
-}
-
-server {
-    listen 443 ssl;
     server_name vault.smileyfam.me;
     access_log off;
 
@@ -72,18 +49,6 @@ server {
     location / {
         include /etc/nginx/conf.d/proxy.conf;
         proxy_pass http://libre_speed_test;
-    }
-}
-
-server {
-    listen 443 ssl;
-    server_name pgadmin.${HOSTNAME};
-    access_log off;
-    
-    location / {
-        proxy_pass http://pgadmin;
-        proxy_set_header Host $host;
-        proxy_redirect off;
     }
 }
 
@@ -114,17 +79,6 @@ server {
     location / {
         include /etc/nginx/conf.d/proxy.conf;
         proxy_pass http://wireguard;
-    }
-}
-
-server {
-    listen 443 ssl;
-    server_name gallery.${HOSTNAME};
-    access_log off;
-
-    location / {
-        include /etc/nginx/conf.d/proxy.conf;
-        proxy_pass http://gallery;
     }
 }
 
@@ -186,23 +140,26 @@ server {
 
 server {
     listen 443 ssl;
-    server_name metube.${HOSTNAME};
-    access_log off;
-
-    location / {
-        include /etc/nginx/conf.d/proxy.conf;
-        proxy_pass http://metube;
-    }
-}
-
-server {
-    listen 443 ssl;
     server_name pve.${HOSTNAME};
     access_log off;
 
     location / {
         include /etc/nginx/conf.d/proxy.conf;
         proxy_pass https://pve;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name img.smileyfam.me;
+    access_log off;
+
+    expires 7d;
+    add_header Cache-Control "immutable";
+
+    location /api/ {
+        alias /var/www/idols/;
+        # autoindex on; # return directory tree in html
     }
 }
 
