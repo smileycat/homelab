@@ -1,0 +1,21 @@
+services:
+  code-server:
+    image: codercom/code-server:latest
+    container_name: code-server
+    restart: unless-stopped
+    networks:
+      - essentials_network
+    user: "1000:1000"
+    environment:
+      - DOCKER_USER=${USER}
+    volumes:
+      - ${DOCKER_VOL}/code-server/.local:/home/coder/.local
+      - ${DOCKER_VOL}/code-server/.config:/home/coder/.config
+      - ${DOCKER_VOL}/code-server/.vscode:/home/coder/.vscode
+      - ${DOCKER_VOL}/code-server/.vscode-server:/home/coder/.vscode-server
+      - ${DOCKER_VOL}/code-server/code:/home/coder/code
+      - ${HOME}/homelab:/home/coder/project
+      - /usr/bin/node:/usr/local/bin/node:ro
+      - /usr/local/go:/usr/local/go:ro
+    ports:
+      - 127.0.0.1:6604:8080

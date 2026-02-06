@@ -1,0 +1,17 @@
+networks:
+  vaultwarden:
+    name: vaultwarden
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    networks:
+      - vaultwarden
+    environment:
+      DOMAIN: "https://vault.smileyfam.au"
+    volumes:
+      - ${DOCKER_VOL}/vaultwarden/:/data/
+    ports:
+      - 6608:80

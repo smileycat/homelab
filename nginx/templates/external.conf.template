@@ -1,0 +1,50 @@
+
+server {
+    listen 8443 ssl;
+    server_name photos.smileyfam.me photos-pg.smileyfam.me;
+    
+    include /etc/nginx/conf.d/immich.conf;
+
+    location / {
+        if ($redirect = no) {
+            return 403;
+        }
+        proxy_pass http://immich;
+    }
+
+    location /share {
+        proxy_pass http://immich$request_uri;
+    }
+}
+
+server {
+    listen 8443 ssl;
+    server_name auth.smileyfam.me;
+
+    if ($redirect = no) {
+        return 403;
+    }
+
+    location / {
+        proxy_pass http://authentik;
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade_keepalive;
+    }
+}
+
+server {
+    listen 8080;
+    server_name *.smileyfam.me smileyfam.me;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 8080 default_server;
+    listen 8443 ssl default_server;
+    server_name _;
+    return 444; # A non-standard Nginx status code to close the connection
+}

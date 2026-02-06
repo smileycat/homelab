@@ -1,0 +1,69 @@
+networks:
+  common:
+    name: common
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    networks:
+      - common
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DOCKER_VOL}/portainer:/data
+    ports:
+      - 9000:9000
+
+  syncthing:
+    image: syncthing/syncthing:1
+    container_name: syncthing
+    networks:
+      - common
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ${DOCKER_VOL}/syncthing/config:/var/syncthing/config
+      - /mnt/data/docker-volume:/var/syncthing/Sync/docker-volume
+      - /mnt/data/sync:/var/syncthing/Sync/data
+    ports:
+      - 127.0.0.1:8384:8384 # Web UI
+      - 22000:22000/tcp # TCP file transfers
+      - 22000:22000/udp # QUIC file transfers
+      - 21027:21027/udp # Receive local discovery broadcasts
+    restart: unless-stopped
+
+  filebrowser:
+    image: filebrowser/filebrowser
+    container_name: filebrowser
+    profiles: ["low"]
+    networks:
+      - common
+    volumes:
+      - /:/srv
+      - ${DOCKER_VOL}/filebrowser/database.db:/database/filebrowser.db
+      - ${DOCKER_VOL}/filebrowser/.filebrowser.json:/.filebrowser.json
+    user: 1000:1000
+    ports:
+      - 6606:80
+    restart: unless-stopped
+  
+  # navidrome:
+  #   image: deluan/navidrome:latest
+  #   container_name: navidrome
+  #   networks:
+  #     - common
+  #   user: 1000:1000 # should be owner of volumes
+  #   ports:
+  #     - "4533:4533"
+  #   restart: unless-stopped
+  #   environment:
+  #     ND_SCANSCHEDULE: 0
+  #     ND_LOGLEVEL: info
+  #     ND_SESSIONTIMEOUT: 168h # a week
+  #     ND_BASEURL: ""
+  #     ND_CONFIGFILE: /data/navidrome.toml
+  #   volumes:
+  #     - "${DOCKER_VOL}/navidrome:/data"
+  #     - "/mnt/data/sync/music:/music:ro"

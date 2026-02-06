@@ -1,0 +1,21 @@
+networks:
+  pgadmin:
+    name: pgadmin
+
+services:
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: pgadmin
+    profiles: ["test"]
+    networks:
+      - pgadmin
+    # required for first time setup
+    # environment:
+    #   - PGADMIN_DEFAULT_EMAIL=admin@email.com
+    #   - PGADMIN_DEFAULT_PASSWORD=password
+    volumes:
+      # set the directory permission to 5050:5050
+      - ${DOCKER_VOL}/pgadmin4:/var/lib/pgadmin
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:6601:80

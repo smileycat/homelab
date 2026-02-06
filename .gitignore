@@ -1,0 +1,10 @@
+.DS_Store
+._*
+*.service
+secret.js
+test.yaml
+
+build
+dist
+logs
+node_modules

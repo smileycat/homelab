@@ -1,0 +1,17 @@
+[Unit]
+Description="Multi purpose api server"
+Documentation=https://api.smileyfam.me
+After=network.target
+
+[Service]
+ExecStart=node /var/www/moon/index.mjs
+Restart=always
+User=cron
+Group=nogroup
+Environment=NODE_ENV=production
+Environment=PORT=6605
+StandardOutput=file:/var/log/moon/app.log
+StandardError=file:/var/log/moon/app.log
+
+[Install]
+WantedBy=multi-user.target
