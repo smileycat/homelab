@@ -1,7 +1,6 @@
 #!/bin/bash
-# sandy DZFouGU4Q6WrOcUrcNiaf2q03RLcJ1PZe0YTJ15bVRs
-# my_key="IJrlGwBBWIF5Ga992o4O2Rs7faJJPymMlSLMNVGWyU"
-fam_key="6t8sF8WL8vRyS7QkYL6nSChiHEDZpJnAUQqkenLbc"
+# my_key=""
+fam_key=""
 key=$fam_key
 
 year=$1
