@@ -55,7 +55,7 @@ func fetchDNSRecords() {
 }
 
 func getPublicIP() string {
-	body := http.Client{}.Get("https://ifconfig.me/ip", nil)
+	body := http.Client{}.Get(config.IPv4GetterURL, nil)
 	return string(body)
 }
 
