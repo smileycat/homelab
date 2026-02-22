@@ -26,7 +26,7 @@ var httpClient http.Client
 var dnsRecords []DNSRecord
 var publicIP string
 
-func updateDNSRecord(r *DNSRecord) {
+func updateDNSRecord(r DNSRecord) {
 	oldIP := r.Content
 	r.Content = publicIP
 	r.Comment = "Last updated: " + time.Now().Format("2006-01-02 15:04:05 MST")
@@ -42,11 +42,12 @@ func fetchDNSRecords() {
 	var jsonBody ApiResponse
 	json.Unmarshal(body, &jsonBody)
 
-	for _, item := range jsonBody.Result {
+	for i := range jsonBody.Result {
+		item := jsonBody.Result[i]
 		if slices.Contains(config.DnsUpdateList, item.Name) {
 			dnsRecords = append(dnsRecords, item)
 			if item.Content != publicIP {
-				updateDNSRecord(&item)
+				updateDNSRecord(item)
 			}
 		}
 	}
@@ -68,8 +69,8 @@ func DDNS() {
 	log.Info(`ddns: public IP has been changed from %v to %v`, publicIP, newIP)
 	publicIP = newIP
 
-	for _, r := range dnsRecords {
-		go updateDNSRecord(&r)
+	for i := range dnsRecords {
+		go updateDNSRecord(dnsRecords[i])
 	}
 }
 

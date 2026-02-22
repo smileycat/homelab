@@ -8,6 +8,7 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
+// Run with "go run -tags=dev main.go"
 func main() {
 	os.Setenv("TZ", config.TZ)
 
