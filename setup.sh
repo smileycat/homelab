@@ -29,7 +29,7 @@ sudo systemctl start qemu-guest-agent
 # (sudo crontab -l 2>/dev/null; echo "0 */6 * * * systemctl restart wg-quick@polarbear") | sudo crontab -
 
 # chmod +x $HOME/homelab/backup.sh
-# (crontab -l 2>/dev/null; echo "0 2 * * * $HOME/homelab/backup.sh") | crontab -
+# (crontab -l 2>/dev/null; echo "0 2 * * * $HOME/homelab/docker/backup.sh") | crontab -
 
 ######### INSTALL DOCKER, NODE #########
 # Add Docker's official GPG key, and repository to Apt
@@ -49,9 +49,6 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 sudo usermod -aG docker $user
 ############ END INSTALL ############
 
-echo 'export DOCKER_VOL=$HOME/docker-volume' >>~/.bashrc
-echo 'export DOCKER_ENV=$HOME/docker-env' >>~/.bashrc
-echo 'export SYNC_PATH=/mnt/data/sync' >>~/.bashrc
 echo 'bind '"'"'"\e[A": history-search-backward'"'"'' >>~/.bashrc
 echo 'bind '"'"'"\e[B": history-search-forward'"'"'' >>~/.bashrc
 
