@@ -7,7 +7,7 @@
       - common
     volumes:
       - /mnt/data/sync:/data # Do not use a root "/" directory or include the "/var" folder
-      - ${DOCKER_VOL}/filebrowser-quantum/config.yaml:/home/filebrowser/config.yaml:ro
+      - ${DOCKER_VOL}/filebrowser-quantum/config.yaml:/home/filebrowser/data/config.yaml:ro
       - ${DOCKER_VOL}/filebrowser-quantum/database.db:/home/filebrowser/database.db
     ports:
       - 127.0.0.1:6606:80
