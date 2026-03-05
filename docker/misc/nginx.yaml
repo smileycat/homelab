@@ -16,7 +16,7 @@ services:
       - ${HOME}/keystore:/etc/keystore:ro
       - /etc/letsencrypt/live:/etc/letsencrypt/live:ro
       - /etc/letsencrypt/archive:/etc/letsencrypt/archive:ro
-      - /mnt/data/sync/Idols:/var/www/idols:ro
+      - ${SYNC_PATH}/Idols:/var/www/idols:ro
   
   nginx:
     build:

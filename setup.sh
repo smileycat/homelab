@@ -51,7 +51,7 @@ sudo usermod -aG docker $user
 
 echo 'export DOCKER_VOL=$HOME/docker-volume' >>~/.bashrc
 echo 'export DOCKER_ENV=$HOME/docker-env' >>~/.bashrc
-echo 'export BACKUP_PATH=/mnt/data/sync/Backup' >>~/.bashrc
+echo 'export SYNC_PATH=/mnt/data/sync' >>~/.bashrc
 echo 'bind '"'"'"\e[A": history-search-backward'"'"'' >>~/.bashrc
 echo 'bind '"'"'"\e[B": history-search-forward'"'"'' >>~/.bashrc
 

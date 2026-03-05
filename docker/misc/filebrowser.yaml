@@ -6,7 +6,7 @@
     networks:
       - common
     volumes:
-      - /mnt/data/sync:/data # Do not use a root "/" directory or include the "/var" folder
+      - ${SYNC_PATH}:/data # Do not use a root "/" directory or include the "/var" folder
       - ${DOCKER_VOL}/filebrowser-quantum/config.yaml:/home/filebrowser/data/config.yaml:ro
       - ${DOCKER_VOL}/filebrowser-quantum/database.db:/home/filebrowser/database.db
     ports:

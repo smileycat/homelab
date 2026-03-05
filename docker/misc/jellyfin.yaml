@@ -8,7 +8,7 @@ services:
     volumes:
       - ${DOCKER_VOL}/jellyfin/config:/config
       - ${DOCKER_VOL}/jellyfin/cache:/cache
-      - /mnt/data/sync:/media
+      - ${SYNC_PATH}:/media
     restart: unless-stopped
     ports:
       - 8096:8096

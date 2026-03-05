@@ -104,8 +104,8 @@ services:
     working_dir: "/photoprism" # do not change or remove
     volumes:
       - "${DOCKER_VOL}/photoprism/originals:/photoprism/originals"               # Original media files (DO NOT REMOVE)
-      - "/mnt/data/sync/Idols/MGY:/photoprism/originals/mgy" # *Additional* media folders can be mounted like this
-      - "/mnt/data/sync/Idols/Sakura:/photoprism/originals/sakura"
+      - "${SYNC_PATH}/Idols/MGY:/photoprism/originals/mgy" # *Additional* media folders can be mounted like this
+      - "${SYNC_PATH}/Idols/Sakura:/photoprism/originals/sakura"
       # - "~/Import:/photoprism/import"                  # *Optional* base folder from which files can be imported to originals
       - "${DOCKER_VOL}/photoprism/storage:/photoprism/storage"                  # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
 
