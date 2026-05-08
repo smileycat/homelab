@@ -7,8 +7,7 @@
       - common
     volumes:
       - ${SYNC_PATH}:/data # Do not use a root "/" directory or include the "/var" folder
-      - ${DOCKER_VOL}/filebrowser-quantum/config.yaml:/home/filebrowser/data/config.yaml:ro
-      - ${DOCKER_VOL}/filebrowser-quantum/database.db:/home/filebrowser/database.db
+      - ${DOCKER_VOL}/filebrowser-quantum:/home/filebrowser/data
     ports:
       - 127.0.0.1:6606:80
     restart: unless-stopped

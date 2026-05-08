@@ -30,7 +30,7 @@ services:
           memory: 30M
 
   syncthing:
-    image: syncthing/syncthing:1
+    image: syncthing/syncthing:2
     container_name: syncthing
     networks:
       - common

@@ -8,6 +8,9 @@ sudo timedatectl set-timezone $timezone
 echo "SystemMaxUse=500M" | sudo tee -a /etc/systemd/journald.conf
 echo "MaxRetentionSec=30d" | sudo tee -a /etc/systemd/journald.conf
 sudo systemctl restart systemd-journald
+# Increase inotify watches for syncthing and immich
+# echo "fs.inotify.max_user_watches=65536" | sudo tee -a /etc/sysctl.conf
+# sudo sysctl -p
 
 # Next two lines mean the user cron can do the "systemctl restart wg-quick*" command without a password
 sudo useradd -rM -s /usr/sbin/nologin cron
