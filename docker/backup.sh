@@ -1,7 +1,7 @@
 #!/bin/bash
 source $HOME/homelab/docker/.env
 
-backup_dir="$SYNC_PATH/Backup"
+backup_dir=$BACKUP_DIR
 date=$(date +%Y-%m-%d)
 
 ##### Vaultwarden backup #####

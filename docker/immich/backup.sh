@@ -1,9 +1,10 @@
 #!/bin/bash
-docker_vol=/mnt/data/docker-volume
+# DEPRECATED
+
 # src1=$docker_vol/immich/library
 # src2=$docker_vol/immich/upload
 # src3=$docker_vol/immich/profile
-dest=$docker_vol/immich/backups
+dest=/mnt/immich/backups
 date=$(date +%Y-%m-%d)
 dbbackupPath=$dest/postgres-$date.sql.gz
 

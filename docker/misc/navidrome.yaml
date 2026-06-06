@@ -19,5 +19,5 @@ services:
       ND_BACKUP_COUNT: 7
     volumes:
       - "${DOCKER_VOL}/navidrome:/data"
-      - "${SYNC_PATH}/Music:/music:ro"
-      - "${SYNC_PATH}/Backup/navidrome:/backup"
+      - "/mnt/lzr/Music:/music:ro"
+      - "${BACKUP_DIR}/navidrome:/backup"

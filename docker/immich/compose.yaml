@@ -20,7 +20,7 @@ services:
     networks:
       - immich_network
     volumes:
-      - /mnt/data/docker-volume/immich:/usr/src/app/upload
+      - /mnt/immich:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - ${DOCKER_ENV}/immich/.env

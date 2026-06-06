@@ -6,7 +6,7 @@
     networks:
       - common
     volumes:
-      - ${SYNC_PATH}:/data # Do not use a root "/" directory or include the "/var" folder
+      - /mnt/lzr:/data # Do not use a root "/" directory or include the "/var" folder
       - ${DOCKER_VOL}/filebrowser-quantum:/home/filebrowser/data
     ports:
       - 127.0.0.1:6606:80

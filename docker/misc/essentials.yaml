@@ -39,7 +39,10 @@ services:
       - PGID=1000
     volumes:
       - ${DOCKER_VOL}/syncthing/config:/var/syncthing/config
-      - /mnt/data:/var/syncthing/Sync
+      - /mnt/share:/mnt/share
+      - /mnt/lzr:/mnt/lzr
+      - /mnt/backups:/mnt/backups
+      - /mnt/immich:/mnt/immich
     ports:
       - 127.0.0.1:8384:8384 # Web UI
       - 22000:22000/tcp # TCP file transfers
