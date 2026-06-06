@@ -2,21 +2,22 @@ include:
   - misc/essentials.yaml
   - misc/nginx.yaml
   - misc/filebrowser.yaml
-  - misc/pgadmin.yaml
-  - immich/compose.yaml
+  # - misc/pgadmin.yaml
+  # - immich/compose.yaml
 
-networks:
-  pi_wg_network:
-    name: pi_wg
-    ipam:
-      config:
-        - subnet: 10.8.1.0/24
+# networks:
+#   pi_wg_network:
+#     name: pi_wg
+#     ipam:
+#       config:
+#         - subnet: 10.8.1.0/24
 
 services:
   pihole:
     image: pihole/pihole:latest
     container_name: pihole
     restart: unless-stopped
+    profiles: ["low"]
     volumes:
       - ${DOCKER_VOL}/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
       - ${DOCKER_VOL}/pihole/etc-pihole:/etc/pihole
@@ -37,6 +38,7 @@ services:
   wg-easy:
     image: ghcr.io/wg-easy/wg-easy:14
     container_name: wg-easy
+    profiles: ["low"]
     networks:
       pi_wg_network:
         ipv4_address: 10.8.1.3
