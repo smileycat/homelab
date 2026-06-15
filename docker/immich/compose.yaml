@@ -7,8 +7,14 @@ volumes:
     name: immich-model-cache
 
 networks:
-  immich_network:
-    name: immich
+  immich-front:
+    name: immich-front
+  immich-internal:
+    name: immich-internal
+    internal: true
+  immich-back:
+    name: immich-back
+    internal: true
 
 services:
   immich-server:
@@ -18,7 +24,9 @@ services:
     #   file: hwaccel.transcoding.yml 
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     networks:
-      - immich_network
+      - immich-front
+      - immich-internal
+      - immich-back
     volumes:
       - /mnt/immich:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
@@ -37,7 +45,7 @@ services:
     image: ghcr.io/immich-app/immich-machine-learning:v2
     container_name: immich-machine-learning
     networks:
-      - immich_network
+      - immich-internal
     volumes:
       - immich-model-cache:/cache
     env_file:
@@ -47,26 +55,28 @@ services:
       disable: false
 
   redis:
-    image: docker.io/valkey/valkey:8-bookworm@sha256:ff21bc0f8194dc9c105b769aeabf9585fea6a8ed649c0781caeac5cb3c247884
+    image: docker.io/valkey/valkey:9@sha256:3b55fbaa0cd93cf0d9d961f405e4dfcc70efe325e2d84da207a0a8e6d8fde4f9
     container_name: immich-redis
     healthcheck:
       test: redis-cli ping || exit 1
     networks:
-      - immich_network
+      - immich-back
     volumes:
       - immich-redis:/data
     restart: unless-stopped
 
   database:
-    image: ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
     container_name: immich-postgres
     networks:
-      - immich_network
-      - pgadmin
+      - immich-back
     env_file:
       - ${DOCKER_ENV}/immich/.env.database
     environment:
       POSTGRES_INITDB_ARGS: '--data-checksums'
     volumes:
       - ${DOCKER_VOL}/immich/postgres:/var/lib/postgresql/data
+    shm_size: 128mb
+    healthcheck:
+      disable: false
     restart: unless-stopped

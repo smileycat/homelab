@@ -14,4 +14,4 @@ services:
     volumes:
       - ${DOCKER_VOL}/vaultwarden/:/data/
     ports:
-      - 6608:80
+      - 127.0.0.1:6608:80

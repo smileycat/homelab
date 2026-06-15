@@ -3,18 +3,6 @@ networks:
     name: common
 
 services:
-  portainer:
-    image: portainer/portainer-ce:latest
-    container_name: portainer
-    restart: unless-stopped
-    networks:
-      - common
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ${DOCKER_VOL}/portainer:/data
-    ports:
-      - 9000:9000
-
   moon-v2:
     build:
       context: ../../moonV2

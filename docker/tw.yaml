@@ -1,5 +1,6 @@
 include:
   - misc/essentials.yaml
+  - misc/portainer.yaml
   - misc/nginx.yaml
   - misc/filebrowser.yaml
   # - misc/pgadmin.yaml
