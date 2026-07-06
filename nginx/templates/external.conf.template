@@ -10,6 +10,8 @@ server {
             return 403;
         }
         proxy_pass http://immich;
+        proxy_set_header   Upgrade    $http_upgrade;
+        proxy_set_header   Connection "upgrade";
     }
 
     location /share {
@@ -28,13 +30,15 @@ server {
     location / {
         include /etc/nginx/conf.d/proxy.conf;
         proxy_pass http://navidrome;
+        proxy_buffering off;
+        proxy_read_timeout 3600s; # Keep the music connection alive
     }
 }
 
 server {
     listen 8080;
     server_name *.smileyfam.me smileyfam.me;
-    return 301 https://$host$request_uri;
+    return 308 https://$host$request_uri;
 }
 
 server {

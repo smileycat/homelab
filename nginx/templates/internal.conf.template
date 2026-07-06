@@ -8,8 +8,12 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/smileyfam.me/privkey.pem;
 
     include /etc/nginx/conf.d/immich.conf;
+    proxy_buffer_size 4k;
+
     location / {
         proxy_pass http://immich;
+        proxy_set_header   Upgrade    $http_upgrade;
+        proxy_set_header   Connection "upgrade";
     }
 }
 
@@ -24,6 +28,9 @@ server {
     location / {
         include /etc/nginx/conf.d/proxy.conf;
         proxy_pass http://navidrome;
+        proxy_buffering off;
+        proxy_buffer_size 4k;
+        proxy_read_timeout 3600s; # Keep the music connection alive
     }
 }
 
@@ -100,22 +107,6 @@ server {
 
 server {
     listen 443 ssl;
-    server_name pihole.${HOSTNAME};
-    access_log off;
-
-    location = / {
-        return 307 https://$host/admin;
-    }
-
-    location / {
-        include /etc/nginx/conf.d/proxy.conf;
-        proxy_pass http://pihole;
-        proxy_read_timeout 90;
-    }
-}
-
-server {
-    listen 443 ssl;
     server_name cockpit.${HOSTNAME};
     access_log off;
 
@@ -166,7 +157,7 @@ server {
 server {
     listen 80;
     server_name *.smileyfam.me smileyfam.me *.smileyfam.au smileyfam.au *.smileyfam.tw smileyfam.tw;
-    return 301 https://$host$request_uri;
+    return 308 https://$host$request_uri;
 }
 
 server {

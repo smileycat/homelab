@@ -1,6 +1,6 @@
 services:
   nginx-internal:
-    image: nginx:1.27
+    image: nginx:1.30
     container_name: nginx-internal
     network_mode: host
     restart: unless-stopped

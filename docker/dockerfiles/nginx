@@ -1,9 +1,9 @@
-ARG NGINX_VERSION=1.27.5
+ARG NGINX_VERSION=1.30.3
 
 FROM nginx:$NGINX_VERSION AS build-stage
 ADD https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz /tmp
 RUN apt update && \
-    apt install -y libmaxminddb0 libmaxminddb-dev mmdb-bin gcc git make zlib1g-dev libpcre3 libpcre3-dev  && \
+    apt install -y libmaxminddb0 libmaxminddb-dev mmdb-bin gcc git make zlib1g-dev libpcre2-8-0 libpcre2-dev && \
     cd /tmp && tar -xzvf nginx-$NGINX_VERSION.tar.gz
 
 WORKDIR /tmp/nginx-$NGINX_VERSION
