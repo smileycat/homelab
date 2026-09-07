@@ -1,11 +1,12 @@
 #!bin/bash
-user=polarbear
-timezone=Asia/Taipei
+user=
+timezone=
+cockpit_domain=
 
 sudo timedatectl set-timezone $timezone
 
 # Reduce journal size and retention period
-echo "SystemMaxUse=500M" | sudo tee -a /etc/systemd/journald.conf
+echo "SystemMaxUse=100M" | sudo tee -a /etc/systemd/journald.conf
 echo "MaxRetentionSec=30d" | sudo tee -a /etc/systemd/journald.conf
 sudo systemctl restart systemd-journald
 # Increase inotify watches for syncthing and immich
@@ -27,6 +28,9 @@ sudo systemctl enable acpid
 sudo systemctl start acpid
 sudo systemctl enable qemu-guest-agent
 sudo systemctl start qemu-guest-agent
+# enable xterm.js on serial0
+sudo systemctl enable serial-getty@ttyS0.service
+sudo systemctl start serial-getty@ttyS0.service
 
 # Add cron job to restart wireguard every 6 hours; for penguin server
 # (sudo crontab -l 2>/dev/null; echo "0 */6 * * * systemctl restart wg-quick@polarbear") | sudo crontab -
@@ -56,5 +60,5 @@ echo 'bind '"'"'"\e[A": history-search-backward'"'"'' >>~/.bashrc
 echo 'bind '"'"'"\e[B": history-search-forward'"'"'' >>~/.bashrc
 
 echo '''[WebService]
-Origins = https://cockpit.smileyfam.me wss://cockpit.smileyfam.me
+Origins = https://$cockpit_domain wss://$cockpit_domain
 ProtocolHeader = X-Forwarded-Proto''' | sudo tee /etc/cockpit/cockpit.conf > /dev/null

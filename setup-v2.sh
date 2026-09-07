@@ -1,14 +1,15 @@
 #!/bin/bash
 # Run this AFTER the Proxmox Docker VM Script
 # For environment variables like DOCKER_VOL, please see homelab/docker/.env
-user=panda
-timezone=Asia/Taipei
+user=
+timezone=
+cockpit_domain=
 
 # 1. System Settings
 echo 'bind '"'"'"\e[A": history-search-backward'"'"'' >>~/.bashrc
 echo 'bind '"'"'"\e[B": history-search-forward'"'"'' >>~/.bashrc
 timedatectl set-timezone $timezone
-echo "SystemMaxUse=500M" | tee -a /etc/systemd/journald.conf
+echo "SystemMaxUse=100M" | tee -a /etc/systemd/journald.conf
 echo "MaxRetentionSec=30d" | tee -a /etc/systemd/journald.conf
 systemctl restart systemd-journald
 
@@ -16,7 +17,7 @@ mkdir ~/.ssh ~/.certbot ~/docker-volume ~/docker-env
 touch ~/.ssh/authorized_keys ~/.certbot/cloudflare.ini
 chmod 600 ~/.ssh/authorized_keys ~/.certbot/cloudflare.ini
 chmod 700 ~/.ssh ~/.certbot
-mkdir /mnt/immich /mnt/lzr /mnt/backups
+mkdir /mnt/immich /mnt/lzr /mnt/share /mnt/backups
 
 echo "fs.inotify.max_user_watches=65536" | tee -a /etc/sysctl.conf
 sysctl -p
@@ -28,19 +29,15 @@ share   /mnt/share      virtiofs        defaults,_netdev,nofail  0  0
 backups /mnt/backups    virtiofs        defaults,_netdev,nofail  0  0" | tee -a /etc/fstab > /dev/null
 
 # 2. Add Cockpit & Apps (Debian 12 specific)
-curl -sSL https://repo.45drives.com/key/gpg.asc | sudo gpg --dearmor -o /usr/share/keyrings/45drives-archive-keyring.gpg
-cd /etc/apt/sources.list.d
-curl -sSL https://repo.45drives.com/lists/45drives.sources -o /etc/apt/sources.list.d/45drives.sources
-apt update
-apt install certbot vim git openssh-server cloud-guest-utils python3-certbot-dns-cloudflare cockpit -y
-# Note: 45Drives Cockpit plugins are great, but ensure their repo supports Debian Bookworm
-apt install cockpit-file-sharing cockpit-identities cockpit-navigator -y
+# for cockpit
+. /etc/os-release
+echo "deb http://deb.debian.org/debian ${VERSION_CODENAME}-backports main" | tee /etc/apt/sources.list.d/backports.list
+curl -sSL https://repo.45drives.com/setup | bash
 
-# not required for community script
-# systemctl enable acpid
-# systemctl start acpid
-# systemctl enable qemu-guest-agent
-# systemctl start gemu-guest-agent
+apt update
+apt install -t ${VERSION_CODENAME}-backports cockpit
+apt install certbot vim git openssh-server cloud-guest-utils python3-certbot-dns-cloudflare -y
+apt install cockpit-file-sharing cockpit-identities cockpit-navigator -y
 
 # 3. Wireguard Permission Helper
 # apt install cron zfsutils-linux wireguard resolvconf -y # for penguin server
@@ -51,12 +48,9 @@ apt install cockpit-file-sharing cockpit-identities cockpit-navigator -y
 growpart /dev/sda 1
 resize2fs /dev/sda1
 
-# 5. User Permissions
-# usermod -aG docker suser || true
-
-# 6. Quality ot Lite & Cockpit Contig
+# 6. Quality of life & Cockpit Contig
 echo '''[WebService]
-Origins = https://cockpit.smileyfam.me wss://cockpit.smileyfam.me
+Origins = https://$cockpit_domain wss://$cockpit_domain
 ProtocolHeader = X-Forwarded-Proto''' | tee /etc/cockpit/cockpit.conf > /dev/null
 
 # 7. Download homelab repo
