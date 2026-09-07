@@ -9,6 +9,7 @@ include:
   - misc/jellyfin.yaml
   - misc/vaultwarden.yaml
   - misc/navidrome.yaml
+  - misc/qbittorrent.yaml
 
 networks:
   pi_wg_network:

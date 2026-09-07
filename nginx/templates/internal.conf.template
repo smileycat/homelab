@@ -61,6 +61,17 @@ server {
 
 server {
     listen 443 ssl;
+    server_name qbittorrent.${HOSTNAME};
+    access_log off;
+
+    location / {
+        include /etc/nginx/conf.d/proxy.conf;
+        proxy_pass http://qbittorrent;
+    }
+}
+
+server {
+    listen 443 ssl;
     server_name jellyfin.${HOSTNAME};
     access_log off;
     include /etc/nginx/conf.d/jellyfin.conf;
