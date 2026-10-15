@@ -167,6 +167,31 @@ server {
 
 server {
     listen 80;
+    server_name pki.${HOSTNAME} pki.smileyfam.me;
+
+    location /root.crt {
+        # Restrict allowed HTTP methods for safety
+        limit_except GET HEAD {
+            deny all;
+        }
+
+        alias /etc/keystore/root.crt;
+
+        types {} 
+        default_type application/x-x509-ca-cert;
+
+        # Headers for cross-origin fetch
+        add_header Access-Control-Allow-Origin "*" always;
+    }
+
+    # Block access to everything else on this server block
+    location / {
+        return 404;
+    }
+}
+
+server {
+    listen 80;
     server_name *.smileyfam.me smileyfam.me *.smileyfam.au smileyfam.au *.smileyfam.tw smileyfam.tw;
     return 308 https://$host$request_uri;
 }
