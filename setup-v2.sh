@@ -11,6 +11,13 @@ echo 'bind '"'"'"\e[B": history-search-forward'"'"'' >>~/.bashrc
 timedatectl set-timezone $timezone
 echo "SystemMaxUse=100M" | tee -a /etc/systemd/journald.conf
 echo "MaxRetentionSec=30d" | tee -a /etc/systemd/journald.conf
+echo "{
+  "log-driver": "local",
+  "log-opts": {
+    "max-size": "1m",
+    "max-file": "3"
+  } 
+}" | tee /etc/docker/daemon.json > /dev/null
 systemctl restart systemd-journald
 
 mkdir ~/.ssh ~/.certbot ~/docker-volume ~/docker-env
@@ -56,9 +63,7 @@ ProtocolHeader = X-Forwarded-Proto''' | tee /etc/cockpit/cockpit.conf > /dev/nul
 # 7. Download homelab repo
 cd ~
 git clone https://github.com/smileycat/homelab.git
-chmod +x ~/homelab/moon-cli/scripts/*.sh
-# TODO: need golang. 
-# ~/homelab/moon-cli/scripts/install.sh
+# TODO:
 
 # 8. SSH
 passwd -u root

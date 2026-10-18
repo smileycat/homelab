@@ -1,6 +1,6 @@
  services: 
   filebrowser-quantum:
-    image: gtstef/filebrowser:stable-slim
+    image: gtstef/filebrowser:2-stable-slim
     container_name: filebrowser-quantum
     user: 1000:1000
     networks:

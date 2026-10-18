@@ -8,6 +8,7 @@ services:
       context: ../../moonV2
       dockerfile: Dockerfile
     container_name: moon-v2
+    profiles: ["low"]
     networks:
       - common
     restart: unless-stopped
