@@ -1,0 +1,146 @@
+name: trmnl
+
+networks:
+  trmnl-front:
+    name: trmnl-front
+  trmnl-back:
+    name: trmnl-back
+
+volumes:
+  keyvalue-data:
+    name: trmnl-keyvalue-data
+  certificates:
+    name: trmnl-certificates
+  web-fonts:
+    name: trmnl-web-fonts
+  web-uploads:
+    name: trmnl-web-uploads
+
+services:
+  init-certificates:
+    image: ghcr.io/usetrmnl/terminus:latest
+    container_name: trmnl-init-certificates
+    user: root
+    environment:
+      CERTIFICATE_URLS: "http://pki.smileyfam.au/root.crt"
+    volumes:
+      - certificates:/etc/ssl/certs
+    entrypoint: ["/bin/bash", "-c"]
+    command: scripts/docker/install-certificates
+    restart: on-failure:3
+
+  trmnl-web:
+    init: true
+    image: ghcr.io/usetrmnl/terminus:latest
+    container_name: trmnl-web
+    env_file:
+      - ${DOCKER_ENV}/trmnl/.env
+    environment:
+      HANAMI_PORT: 2300
+      APP_SETUP: true
+    ports:
+      - 127.0.0.1:2300:2300
+    restart: unless-stopped
+    volumes:
+      - certificates:/etc/ssl/certs
+      - web-fonts:/app/public/fonts
+      - web-fonts:/usr/share/fonts/terminus
+      - web-uploads:/app/public/uploads
+    networks:
+      - trmnl-front
+      - trmnl-back
+    depends_on:
+      init-certificates:
+        condition: service_completed_successfully
+      trmnl-db:
+        condition: service_healthy
+      trmnl-keyvalue:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://localhost:$$HANAMI_PORT/up"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "1.0"
+
+  trmnl-worker:
+    init: true
+    image: ghcr.io/usetrmnl/terminus:latest
+    container_name: trmnl-worker
+    env_file:
+      - ${DOCKER_ENV}/trmnl/.env
+    command: bundle exec sidekiq -r ./config/sidekiq.rb
+    restart: unless-stopped
+    volumes:
+      - certificates:/etc/ssl/certs
+      - web-fonts:/app/public/fonts
+      - web-fonts:/usr/share/fonts/terminus
+      - web-uploads:/app/public/uploads
+    networks:
+      - trmnl-back
+    depends_on:
+      trmnl-web:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "sidekiq"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "1.0"
+
+  trmnl-db:
+    image: postgres:18.6-alpine
+    container_name: trmnl-database
+    env_file:
+      - ${DOCKER_ENV}/trmnl/.env
+    volumes:
+      - ${DOCKER_VOL}/trmnl/database:/var/lib/postgresql
+    restart: unless-stopped
+    networks:
+      - trmnl-back
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --username $$DATABASE_USER --dbname $$DATABASE_NAME --port $$DATABASE_PORT"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512mb
+          cpus: "0.5"
+
+  trmnl-keyvalue:
+    image: docker.io/valkey/valkey:9@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd
+    container_name: trmnl-keyvalue
+    env_file:
+      - ${DOCKER_ENV}/trmnl/.env
+    command: >
+      valkey-server
+      --maxmemory 512mb
+      --maxmemory-policy noeviction
+    restart: unless-stopped
+    volumes:
+      - keyvalue-data:/data
+    networks:
+      - trmnl-back
+    healthcheck:
+      test: redis-cli ping | grep -q PONG || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 2s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.5"
